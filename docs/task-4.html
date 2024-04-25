@@ -169,6 +169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#training-and-evaluating-models" id="toc-training-and-evaluating-models" class="nav-link" data-scroll-target="#training-and-evaluating-models"><span class="header-section-number">4</span> Training and evaluating models</a></li>
   <li><a href="#trying-a-different-imputer" id="toc-trying-a-different-imputer" class="nav-link" data-scroll-target="#trying-a-different-imputer"><span class="header-section-number">5</span> Trying a different imputer</a></li>
   <li><a href="#feature-importance" id="toc-feature-importance" class="nav-link" data-scroll-target="#feature-importance"><span class="header-section-number">6</span> Feature importance</a></li>
+  <li><a href="#confusion-matrix" id="toc-confusion-matrix" class="nav-link" data-scroll-target="#confusion-matrix"><span class="header-section-number">7</span> Confusion matrix</a></li>
   </ul>
 </nav>
     </div>
@@ -232,7 +233,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> data[<span class="st">'WeightClass'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="ecb6c57b" class="cell" data-execution_count="221">
+<div id="e70fce10" class="cell" data-execution_count="221">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -765,9 +766,9 @@ Figure&nbsp;1: Classification Performance
 <h1 data-number="5"><span class="header-section-number">5</span> Trying a different imputer</h1>
 <p>This step explores a different imputer for categorical attributes that is replacing missing values with a new category ‘unknown’.</p>
 <ul>
-<li><strong>Random Forest</strong> model achieved <strong>81% training accuracy</strong> and a smaller degradation in test accuaracy (<strong>79%</strong>).</li>
+<li><strong>Random Forest</strong> model achieved <strong>97% training accuracy</strong> and a smaller degradation in test accuaracy (<strong>83%</strong>).</li>
 </ul>
-<div id="51079c51" class="cell" data-execution_count="222">
+<div id="f5f8786f" class="cell" data-execution_count="222">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ObesityDatasetImputer2(TransformerMixin):</span>
@@ -816,30 +817,32 @@ Figure&nbsp;1: Classification Performance
 <span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="85e08597" class="cell" data-execution_count="239">
+<div id="c950c57e" class="cell" data-execution_count="283">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># loading dataset</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">'obesity.data.txt'</span>, sep<span class="op">=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> data.drop([<span class="st">'WeightClass'</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> data[<span class="st">'WeightClass'</span>]</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> data[<span class="st">'WeightClass'</span>] <span class="op">-</span> <span class="dv">1</span></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>imputer <span class="op">=</span> ObesityDatasetImputer2()</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>imputer.fit(X)</span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>X_ <span class="op">=</span> imputer.transform(X)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>imputer <span class="op">=</span> ObesityDatasetImputer2()</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>imputer.fit(X)</span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>gen_mapping <span class="op">=</span> {<span class="st">'Female'</span>:<span class="dv">0</span>, <span class="st">'Male'</span>:<span class="dv">1</span>}</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>mapping1 <span class="op">=</span> {<span class="st">'unknown'</span>:<span class="op">-</span><span class="dv">1</span>, <span class="st">'no'</span>:<span class="dv">0</span>, <span class="st">'yes'</span>:<span class="dv">1</span>}</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>mapping2 <span class="op">=</span> {<span class="st">'unknown'</span>:<span class="op">-</span><span class="dv">1</span>, <span class="st">'no'</span>:<span class="dv">0</span>, <span class="st">'Sometimes'</span>:<span class="dv">1</span>, <span class="st">'Frequently'</span>:<span class="dv">2</span>, <span class="st">'Always'</span>:<span class="dv">3</span>}</span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>mt_mapping <span class="op">=</span> {<span class="st">'unknown'</span>:<span class="op">-</span><span class="dv">1</span>, <span class="st">'Walking'</span>:<span class="dv">0</span>, <span class="st">'Bike'</span>:<span class="dv">1</span>, <span class="st">'Motorbike'</span>:<span class="dv">2</span>, <span class="st">'Public_Transportation'</span>:<span class="dv">3</span>, <span class="st">'Automobile'</span>:<span class="dv">4</span>}</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"># transforming categ to num</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>X_num <span class="op">=</span> X_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>X_ <span class="op">=</span> imputer.transform(X)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>gen_mapping <span class="op">=</span> {<span class="st">'Female'</span>:<span class="dv">0</span>, <span class="st">'Male'</span>:<span class="dv">1</span>}</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>mapping1 <span class="op">=</span> {<span class="st">'unknown'</span>:<span class="op">-</span><span class="dv">1</span>, <span class="st">'no'</span>:<span class="dv">0</span>, <span class="st">'yes'</span>:<span class="dv">1</span>}</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>mapping2 <span class="op">=</span> {<span class="st">'unknown'</span>:<span class="op">-</span><span class="dv">1</span>, <span class="st">'no'</span>:<span class="dv">0</span>, <span class="st">'Sometimes'</span>:<span class="dv">1</span>, <span class="st">'Frequently'</span>:<span class="dv">2</span>, <span class="st">'Always'</span>:<span class="dv">3</span>}</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>mt_mapping <span class="op">=</span> {<span class="st">'unknown'</span>:<span class="op">-</span><span class="dv">1</span>, <span class="st">'Walking'</span>:<span class="dv">0</span>, <span class="st">'Bike'</span>:<span class="dv">1</span>, <span class="st">'Motorbike'</span>:<span class="dv">2</span>, <span class="st">'Public_Transportation'</span>:<span class="dv">3</span>, <span class="st">'Automobile'</span>:<span class="dv">4</span>}</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co"># transforming categ to num</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>X_num <span class="op">=</span> X_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="336d536f" class="cell" data-execution_count="242">
+<div id="0f2a27fc" class="cell" data-execution_count="284">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>X_num[<span class="st">'Gender'</span>] <span class="op">=</span> X_[<span class="st">'Gender'</span>].<span class="bu">map</span>(gen_mapping)</span>
@@ -854,7 +857,7 @@ Figure&nbsp;1: Classification Performance
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>X_num[<span class="st">'MTRANS'</span>] <span class="op">=</span> X_[<span class="st">'MTRANS'</span>].<span class="bu">map</span>(mt_mapping)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="9339b594" class="cell" data-execution_count="246">
+<div id="5afe2aa5" class="cell" data-execution_count="289">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># train and test split</span></span>
@@ -863,53 +866,51 @@ Figure&nbsp;1: Classification Performance
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># random forest classifier</span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>rd <span class="op">=</span> RandomForestClassifier()</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {<span class="st">'n_estimators'</span>:[<span class="dv">50</span>,<span class="dv">100</span>,<span class="dv">150</span>,<span class="dv">200</span>],</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>         <span class="st">'max_depth'</span>: [<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">10</span>],</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>          <span class="st">'min_samples_split'</span>: [<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">10</span>]}</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> DecisionTreeClassifier()</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co"># searching hyperparameters</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>grid <span class="op">=</span> GridSearchCV(rd, params, cv<span class="op">=</span><span class="dv">5</span>)</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>grid.fit(train_X, train_y)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {<span class="st">'n_estimators'</span>:[<span class="dv">50</span>,<span class="dv">100</span>,<span class="dv">150</span>,<span class="dv">200</span>,<span class="dv">250</span>,<span class="dv">300</span>],</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>         <span class="st">'max_depth'</span>: [<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>, <span class="dv">10</span>],</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>          <span class="st">'min_samples_split'</span>: [<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">10</span>]}</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="246">
-<style>#sk-container-id-7 {color: black;}#sk-container-id-7 pre{padding: 0;}#sk-container-id-7 div.sk-toggleable {background-color: white;}#sk-container-id-7 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-7 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-7 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-7 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-7 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-7 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-7 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-7 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-7 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-7 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-7 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-7 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-7 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-7 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-7 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-7 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-7 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-7 div.sk-item {position: relative;z-index: 1;}#sk-container-id-7 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-7 div.sk-item::before, #sk-container-id-7 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-7 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-7 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-7 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-7 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-7 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-7 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-7 div.sk-label-container {text-align: center;}#sk-container-id-7 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-7 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-7" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>GridSearchCV(cv=5, estimator=RandomForestClassifier(),
-             param_grid={'max_depth': [3, 5, 10],
-                         'min_samples_split': [2, 5, 10],
-                         'n_estimators': [50, 100, 150, 200]})</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-41" type="checkbox"><label for="sk-estimator-id-41" class="sk-toggleable__label sk-toggleable__label-arrow">GridSearchCV</label><div class="sk-toggleable__content"><pre>GridSearchCV(cv=5, estimator=RandomForestClassifier(),
-             param_grid={'max_depth': [3, 5, 10],
-                         'min_samples_split': [2, 5, 10],
-                         'n_estimators': [50, 100, 150, 200]})</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-42" type="checkbox"><label for="sk-estimator-id-42" class="sk-toggleable__label sk-toggleable__label-arrow">estimator: RandomForestClassifier</label><div class="sk-toggleable__content"><pre>RandomForestClassifier()</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-43" type="checkbox"><label for="sk-estimator-id-43" class="sk-toggleable__label sk-toggleable__label-arrow">RandomForestClassifier</label><div class="sk-toggleable__content"><pre>RandomForestClassifier()</pre></div></div></div></div></div></div></div></div></div></div>
 </div>
-</div>
-<div id="3047bde8" class="cell" data-execution_count="247">
+<div id="c436c4ff" class="cell" data-execution_count="291">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>best_model <span class="op">=</span> grid.best_estimator_</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> cross_val_score(best_model, train_X, train_y)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Train accuracy:</span><span class="sc">{:.2f}</span><span class="st">% '</span>.<span class="bu">format</span>(np.mean(score)<span class="op">*</span><span class="dv">100</span>))</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Test accuracy:</span><span class="sc">{:.2f}</span><span class="st">% '</span>.<span class="bu">format</span>(best_model.score(test_X, test_y)<span class="op">*</span><span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># searching hyperparameters</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">#grid = GridSearchCV(rd, params, cv=5)</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">#grid.fit(train_X, train_y)</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">#best_model = grid.best_estimator_</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> cross_val_score(best_model, train_X, train_y)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Train accuracy:</span><span class="sc">{:.2f}</span><span class="st">% '</span>.<span class="bu">format</span>(best_model.score(train_X, train_y)<span class="op">*</span><span class="dv">100</span>))</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Test accuracy:</span><span class="sc">{:.2f}</span><span class="st">% '</span>.<span class="bu">format</span>(best_model.score(test_X, test_y)<span class="op">*</span><span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Train accuracy:97.09% 
+Test accuracy:83.33% </code></pre>
+</div>
 </div>
 </section>
 <section id="feature-importance" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Feature importance</h1>
 <p><a href="#fig-imp" class="quarto-xref">Figure&nbsp;2</a> shows feature importance of obesity data attributes towards classifying weight class.</p>
 <p><strong>Features <code>Weight</code>, <code>Age</code>, <code>Height</code> <code>FCVC</code>, <code>NCP</code> were the top-5 most important features.</strong></p>
-<div id="cell-fig-imp" class="cell" data-execution_count="268">
+<div id="cell-fig-imp" class="cell" data-execution_count="292">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>feature_scores <span class="op">=</span> pd.Series(best_model.feature_importances_, index<span class="op">=</span>train_X.columns).sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">25</span>, <span class="dv">30</span>))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> sns.barplot(x<span class="op">=</span>feature_scores, y<span class="op">=</span>feature_scores.index)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Visualize feature scores of the features"</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>ax.set_yticklabels(feature_scores.index)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Feature importance score"</span>)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Features"</span>)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>feature_scores <span class="op">=</span> pd.Series(best_model.feature_importances_, index<span class="op">=</span>train_X.columns).sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">25</span>, <span class="dv">30</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> sns.barplot(x<span class="op">=</span>feature_scores, y<span class="op">=</span>feature_scores.index)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Visualize feature scores of the features"</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>ax.set_yticklabels(feature_scores.index)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Feature importance score"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Features"</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div id="fig-imp" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -922,6 +923,60 @@ Figure&nbsp;2: Feature importance
 </figcaption>
 </figure>
 </div>
+</div>
+</div>
+</section>
+<section id="confusion-matrix" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Confusion matrix</h1>
+<p><a href="#fig-conf" class="quarto-xref">Figure&nbsp;3</a> shows the confusion matrix of moder’s performance on test data set.</p>
+<p><strong>Concern</strong></p>
+<ul>
+<li>The classifier misclassifies ~27% instances of <code>over weight</code> to <code>normal</code>.</li>
+</ul>
+<div id="cell-fig-conf" class="cell" data-execution_count="301">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> confusion_matrix, ConfusionMatrixDisplay</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>cm <span class="op">=</span> confusion_matrix(best_model.predict(test_X),test_y)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>cols <span class="op">=</span> [<span class="st">'under_weight'</span>,<span class="st">'normal'</span>,<span class="st">'over_weight'</span>,<span class="st">'obese'</span>]</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>disp <span class="op">=</span> ConfusionMatrixDisplay(confusion_matrix<span class="op">=</span>cm, display_labels<span class="op">=</span>cols)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>disp.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<div id="fig-conf" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-conf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="task-4_files/figure-html/fig-conf-output-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-conf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Feature importance
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div id="197ae29e" class="cell" data-execution_count="302">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>test_y.value_counts()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="302">
+<pre><code>WeightClass
+3    234
+2    137
+1     86
+0     71
+Name: count, dtype: int64</code></pre>
+</div>
+</div>
+<div id="497a954b" class="cell" data-execution_count="303">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="dv">24</span><span class="op">/</span><span class="dv">86</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="303">
+<pre><code>0.27906976744186046</code></pre>
 </div>
 </div>
 
